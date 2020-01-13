@@ -1,0 +1,26 @@
+# vim: filetype=txtquery
+#SELECT ?v0 ?v2 ?v3 WHERE {  ?v2	sorg:caption	?v3 .  ?v0	wsdbm:likes	?v2 .  } LIMIT 10
+#Ejemplo de Count
+#SELECT ?v2 ?v3 (count(?v2) as ?count) WHERE {  ?v2	sorg:caption	?v3 .  ?v0	wsdbm:likes	?v2 .  } GROUP BY ?v2 ?v3 ORDER BY DESC(?count) LIMIT 10
+#Star query
+#SELECT ?v0 ?v1 ?v3 ?v4 ?v5 ?v6 ?v7 ?v8 ?v9 WHERE { ?v0	gr:includes	?v1 .  ?v0	gr:price	?v3 .  ?v0	gr:serialNumber	?v4 .  ?v0	gr:validFrom	?v5 .  } LIMIT 10
+
+#SELECT ?v0 ?v1 ?v3 ?v4 WHERE { ?v0	gr:includes	?v1 .  ?v0	gr:price	?v3 .  ?v0	gr:serialNumber	?v4 .  } LIMIT 10
+#SELECT ?s ?p ?f WHERE { ?s ?p ?f } LIMIT 10
+
+#SELECT ?v0 ?v1 ?v3 WHERE { ?v0	dc:Location	?v1 .  ?v0	wsdbm:gender	?v3 .  ?v0	rdf:type	wsdbm:Role2 .  } LIMIT 10
+#SELECT ?v1 ?v3 WHERE { wsdbm:User10005	dc:Location	?v1 .  wsdbm:User10005	wsdbm:gender	?v3 .  wsdbm:User10005	rdf:type	wsdbm:Role2 .  } LIMIT 10
+
+#SELECT ?v0 ?p ?v1  WHERE { ?v0 ?p	?v1 . FILTER regex(?p, "Location", "i")  } LIMIT 10
+
+# Obtener predicados diferentes
+# SELECT DISTINCT ?p WHERE { ?s ?p ?o }
+
+# ##--- Consulta 2 BGP ---##
+# Polinomio: 2*k + 4245.0 (Lineal)
+#SELECT ?v0 ?v2 ?v3 WHERE {  ?v2    sorg:caption    ?v3 .  ?v0    wsdbm:likes    ?v2 .  }
+CONSTRUCT WHERE {  ?v2    sorg:caption    ?v3 .  ?v0    wsdbm:likes    ?v2 .  }
+
+# ##--- Consulta 3 BGP ---##
+# Polinomio: 2.0*k^2 + 3581.0*k + 1429179.0 (Cuadratico)
+#SELECT ?v0 ?v2 ?v3 ?v8 WHERE { ?v0    gr:offers    ?v2 .  ?v2    gr:includes    ?v3 .  ?v3    rev:hasReview    ?v8 .  }

@@ -1,0 +1,1 @@
+SELECT * WHERE {  ?p vocabulary:knows ?n .  ?n vocabulary:hasPerson ?o .  ?p vocabulary:hasInterest ?i .  ?o vocabulary:hasInterest ?i .  } LIMIT 50 

@@ -1,0 +1,9 @@
+## Instrucciones
+- Clonar proyecto hdt-java https://github.com/rdfhdt/hdt-java
+- Ir a la carpeta `hdt-funseki`
+- Compilar con comando `mvn package dependency:copy-dependencies`
+
+export PATH=/Users/constanza/apache-maven-3.6.2/bin:$PATH
+
+export JENA_HOME=/Users/constanza/apache-jena-3.10.0  
+export PATH=$PATH:$JENA_HOME/bin

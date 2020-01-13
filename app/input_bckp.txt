@@ -1,0 +1,2 @@
+?p vocabulary:knows ?n .  ?n vocabulary:hasPerson ?o .  ?p vocabulary:hasInterest ?i .  ?o vocabulary:hasInterest ?i .
+65,65,65

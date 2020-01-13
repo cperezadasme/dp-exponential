@@ -1,0 +1,52 @@
+# vim: filetype=txtquery
+#Input clave de WatDiv
+SELECT ?v0 ?v2 ?v3 WHERE {  ?v2	sorg:caption	?v3 .  ?v0	wsdbm:likes	?v2 .  }
+#?p vocabulary:knows ?n .  ?n vocabulary:hasPerson ?o .  ?p vocabulary:hasInterest ?i .  ?o vocabulary:hasInterest ?i .
+
+# PROBANDO STAR QUERY
+#SELECT ?v0 ?v1 ?v3 ?v4 WHERE { ?v0	gr:includes	?v1 .  ?v0	gr:price	?v3 .  ?v0	gr:serialNumber	?v4 .  } LIMIT 10 
+#-> No resulta, por que valor de maxfreq uno no da 1
+
+#65,65,65
+#1,34
+#1,600
+
+
+
+
+# DOUBLE PATH
+#SELECT ?v0 ?v2 ?v3 WHERE {  ?v2	sorg:caption	?v3 .  ?v0	wsdbm:likes	?v2 .  }
+#TRIPLE PATH
+#SELECT ?v0 ?v2 ?v3 ?v8 WHERE { ?v0	gr:offers	?v2 .  ?v2	gr:includes	?v3 .  ?v3	rev:hasReview	?v8 .  }
+
+
+
+### QUERIES PROFE ###
+
+### /home/aczombie/memoria_herramientas/TestsProfe/PrivacyEvaluation/queries/query_31.rq ### 
+ SELECT (COUNT(?v0) as ?v0_count) WHERE {  ?v0 <http://db.uwaterloo.ca/~galuc/wsdbm/hasGenre> <http://db.uwaterloo.ca/~galuc/wsdbm/SubGenre78> .  ?v0 <http://ogp.me/ns#title> ?v1 .  }
+### /home/aczombie/memoria_herramientas/TestsProfe/PrivacyEvaluation/queries/query_1368.rq ### 
+ SELECT (COUNT(?v0) as ?v0_count) WHERE {  ?v0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://db.uwaterloo.ca/~galuc/wsdbm/ProductCategory14> .  ?v0 <http://ogp.me/ns#tag> ?v1 .  ?v0 <http://schema.org/keywords> ?v3 .  }
+### /home/aczombie/memoria_herramientas/TestsProfe/PrivacyEvaluation/queries/query_1074.rq ### 
+ SELECT (COUNT(?v0) as ?v0_count) WHERE {  ?v0 <http://schema.org/eligibleRegion> <http://db.uwaterloo.ca/~galuc/wsdbm/Country1> .  ?v0 <http://purl.org/goodrelations/includes> ?v1 .  ?v2 <http://purl.org/goodrelations/offers> ?v0 .  ?v0 <http://purl.org/goodrelations/price> ?v3 .  ?v0 <http://purl.org/goodrelations/serialNumber> ?v4 .  ?v0 <http://purl.org/goodrelations/validFrom> ?v5 .  ?v0 <http://purl.org/goodrelations/validThrough> ?v6 .  ?v0 <http://schema.org/eligibleQuantity> ?v8 .  ?v0 <http://schema.org/priceValidUntil> ?v10 .  ?v1 <http://schema.org/author> ?v7 .  }
+### /home/aczombie/memoria_herramientas/TestsProfe/PrivacyEvaluation/queries/query_1090.rq ### 
+# SELECT (COUNT(?v0) as ?v0_count) WHERE {  ?v0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://db.uwaterloo.ca/~galuc/wsdbm/ProductCategory12> .  ?v0 <http://ogp.me/ns#tag> ?v1 .  ?v0 <http://schema.org/keywords> ?v3 .  }
+### /home/aczombie/memoria_herramientas/TestsProfe/PrivacyEvaluation/queries/query_1115.rq ### 
+# SELECT (COUNT(?v0) as ?v0_count) WHERE {  ?v1 <http://ogp.me/ns#tag> <http://db.uwaterloo.ca/~galuc/wsdbm/Topic249> .  ?v0 <http://purl.org/goodrelations/includes> ?v1 .  ?v1 <http://schema.org/description> ?v6 .  ?v0 <http://purl.org/goodrelations/serialNumber> ?v2 .  ?v0 <http://purl.org/goodrelations/validFrom> ?v3 .  ?v0 <http://purl.org/goodrelations/validThrough> ?v4 .  ?v0 <http://schema.org/eligibleQuantity> ?v7 .  ?v0 <http://schema.org/eligibleRegion> ?v8 .  }
+### /home/aczombie/memoria_herramientas/TestsProfe/PrivacyEvaluation/queries/query_1044.rq ### 
+# SELECT (COUNT(?v0) as ?v0_count) WHERE {  <http://db.uwaterloo.ca/~galuc/wsdbm/User17009> <http://schema.org/nationality> ?v2 .  ?v0 <http://schema.org/eligibleRegion> ?v2 .  ?v0 <http://schema.org/eligibleQuantity> ?v1 .  }
+### /home/aczombie/memoria_herramientas/TestsProfe/PrivacyEvaluation/queries/query_1870.rq ### 
+# SELECT (COUNT(?v0) as ?v0_count) WHERE {  ?v0 <http://db.uwaterloo.ca/~galuc/wsdbm/hasGenre> <http://db.uwaterloo.ca/~galuc/wsdbm/SubGenre55> .  ?v0 <http://ogp.me/ns#title> ?v1 .  }
+### /home/aczombie/memoria_herramientas/TestsProfe/PrivacyEvaluation/queries/query_117.rq ### 
+# SELECT (COUNT(?v0) as ?v0_count) WHERE {  ?v0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://db.uwaterloo.ca/~galuc/wsdbm/ProductCategory1> .  ?v0 <http://ogp.me/ns#tag> ?v1 .  ?v0 <http://schema.org/keywords> ?v3 .  }
+### /home/aczombie/memoria_herramientas/TestsProfe/PrivacyEvaluation/queries/query_1777.rq ### 
+# SELECT (COUNT(?v0) as ?v0_count) WHERE {  ?v1 <http://ogp.me/ns#tag> <http://db.uwaterloo.ca/~galuc/wsdbm/Topic145> .  ?v0 <http://purl.org/goodrelations/includes> ?v1 .  ?v1 <http://schema.org/description> ?v6 .  ?v0 <http://purl.org/goodrelations/serialNumber> ?v2 .  ?v0 <http://purl.org/goodrelations/validFrom> ?v3 .  ?v0 <http://purl.org/goodrelations/validThrough> ?v4 .  ?v0 <http://schema.org/eligibleQuantity> ?v7 .  ?v0 <http://schema.org/eligibleRegion> ?v8 .  }
+### /home/aczombie/memoria_herramientas/TestsProfe/PrivacyEvaluation/queries/query_2019.rq ### 
+# SELECT (COUNT(?v0) as ?v0_count) WHERE {  ?v0 <http://schema.org/eligibleRegion> <http://db.uwaterloo.ca/~galuc/wsdbm/Country3> .  ?v0 <http://purl.org/goodrelations/includes> ?v1 .  ?v2 <http://purl.org/goodrelations/offers> ?v0 .  ?v0 <http://purl.org/goodrelations/price> ?v3 .  ?v0 <http://purl.org/goodrelations/serialNumber> ?v4 .  ?v0 <http://purl.org/goodrelations/validFrom> ?v5 .  ?v0 <http://purl.org/goodrelations/validThrough> ?v6 .  ?v0 <http://schema.org/eligibleQuantity> ?v8 .  ?v0 <http://schema.org/priceValidUntil> ?v10 .  ?v1 <http://schema.org/author> ?v7 .  }
+### /home/aczombie/memoria_herramientas/TestsProfe/PrivacyEvaluation/queries/query_123.rq ### 
+# SELECT (COUNT(?v0) as ?v0_count) WHERE {  ?v0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://db.uwaterloo.ca/~galuc/wsdbm/ProductCategory7> .  ?v0 <http://ogp.me/ns#title> ?v1 .  ?v0 <http://schema.org/caption> ?v3 .  ?v4 <http://db.uwaterloo.ca/~galuc/wsdbm/likes> ?v0 .  }
+### /home/aczombie/memoria_herramientas/TestsProfe/PrivacyEvaluation/queries/query_1783.rq ### 
+# SELECT (COUNT(?v0) as ?v0_count) WHERE {  ?v0 <http://db.uwaterloo.ca/~galuc/wsdbm/hasGenre> <http://db.uwaterloo.ca/~galuc/wsdbm/SubGenre87> .  ?v0 <http://xmlns.com/foaf/homepage> ?v1 .  ?v0 <http://ogp.me/ns#tag> ?v2 .  ?v0 <http://schema.org/keywords> ?v3 .  }
+
+
+#SELECT (COUNT(?v0) as ?v0_count) WHERE {  <http://db.uwaterloo.ca/~galuc/wsdbm/User17009> <http://schema.org/nationality> ?v2 .  ?v0 <http://schema.org/eligibleRegion> ?v2 .  ?v0 <http://schema.org/eligibleQuantity> ?v1 .  }
