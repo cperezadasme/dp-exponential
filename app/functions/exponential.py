@@ -1,7 +1,5 @@
 import numpy as np
-# from utilis.readdata import *
-from collections import Counter
-# import math
+import csv
 
 
 class ExponentialMechanism:
@@ -40,24 +38,30 @@ class ExponentialMechanism:
         self.offers_count = {}
         self.offers_prop = {}
         self.offers_price = {}
-        total = 0
-
+        ofile = open('./grafo.csv', "w")
+        writer = csv.writer(ofile, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL)
+        # import ipdb; ipdb.set_trace()
         for element in self.graph:
             # print('BGP_Elements: '+str(len(element)))
             element_id = element['@id']
             if 'Offer' in element_id:
                 if element_id not in self.offers_price.keys():
-                    self.offers_price[element_id] = int(element['http://purl.org/goodrelations/price'][0]['@value'])
+                    value = element['http://purl.org/goodrelations/price'][0]['@value']
+                    self.offers_price[element_id] = int(value)
+                    # writer.writerow([element_id])
 
             if 'Retailer' in element_id:
                 for offer in element['http://purl.org/goodrelations/offers']:
                     offer_id = offer['@id']
                     if offer_id not in self.offers_count.keys():
                         self.offers_count[offer_id] = 1
+                        writer.writerow([offer_id])
                     else:
                         self.offers_count[offer_id] += 1
-
-        total = len(list(self.offers_count.keys()))
+        # import ipdb; ipdb.set_trace()
+        # ofile.close()
+        print(len(self.offers_count.keys()))
+        total = sum(self.offers_count.values())
 
         for offer_id, count in self.offers_count.items():
             self.offers_prop[offer_id] = count / total
@@ -109,7 +113,7 @@ class ExponentialMechanism:
 #         calculate the groundtruth
 #         the most frequent education value
 
-#         Returns:
+#         Returns:  
 #             [string] -- [most frequent education value]
 #         """
 
