@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import requests
 import json
 import re
 import config
-from SPARQLWrapper import SPARQLWrapper, JSON, XML
+from SPARQLWrapper import SPARQLWrapper, JSON
 
 
 class SparqlQuery:
@@ -74,26 +73,9 @@ class SparqlQuery:
             print('BGP Reconocido!')
         return bgp
 
-    def elementsNumber(self):
-        """
-        Retorna la cantidad de elementos dentro de la base de datos de Grafo RDF
-        (el número total de triples) para poder calcularlo luego en Elastic Sensitivity
-        o donde lo requiera.
-        """
-        req = requests.post(self.url, data={'query': 'SELECT (COUNT(?s) AS ?triples) WHERE { ?s ?p ?o }'})
-        items = json.loads(req.text)['results']['bindings'][0]['triples']['value']
-        if self.debug:
-            print('Cantidad de elementos en dataset: ' + items)
-        return int(items)
-
     def construct_graph(self, bgp):
         """
-        Retorna la cantidad de elementos dentro de un BGP, realizando una consulta CONSTRUCT para obtener
-        un nuevo Grafo RDF, y a este extraer la cantidad de elementos que tiene
-
-        OBS: Al final de esta función, se observa un 'for element in graph'. Esto esta así,
-        debido a la libreria RDFLIB, que retorna un tipo GraphContext al realizar la query
-        CONSTRUCT, y este tiene un solo elemento, que es el extraido a través del for.
+        Retorna un subgrafo RDF en formate JSON que se obtiene al realizar una consulta CONSTRUCT
         """
         aux = []
         for pattern in bgp:
@@ -101,37 +83,23 @@ class SparqlQuery:
             aux.append(pattern_str)
         bgp_string = ' . '.join(aux)
         sparqlwrapper = SPARQLWrapper(self.url)
-        if self.debug:
-            print('CONSTRUCT QUERY: ' + 'CONSTRUCT WHERE {' + bgp_string + '}')
+        print('CONSTRUCT QUERY: ' + 'CONSTRUCT WHERE {' + bgp_string + '}')
         sparqlwrapper.setQuery(self.prefix + ' ' + 'CONSTRUCT WHERE {' + bgp_string + '}')
         sparqlwrapper.setReturnFormat(JSON)
         graph = sparqlwrapper.query().convert()
         results = graph.serialize(format='application/ld+json')
-        results = json.loads(results)
-        # sparqlwrapper.setReturnFormat(XML)
-        # results = sparqlwrapper.query().convert()
-        # data = {}
-        # for element in results:
-        #     # print('BGP_Elements: '+str(len(element)))
-        #     if 'Offer' in element['@id']:
-        #         price = int(element['http://purl.org/goodrelations/price'][0]['@value'])
-        #         if price not in data.keys():
-        #             data[price] = 1
-        #         else:
-        #             data[price] += 1
-        #     if self.debug:
-        #         print(element)
-        # opt = max(list(data.keys())) # max q(d,r) q(d,r) = data.key * data.value
-        # import ipdb; ipdb.set_trace()
-        
-        return results
+        return json.loads(results)
 
     def raw(self, query, prefix=None):
         """
         Realiza una consulta normal al servidor SPARQL
         """
         if not prefix:
-            query = self.prefix + query
-        req = requests.post(self.url, data={'query': query})
-        data = json.loads(req.text)
-        return data['results']['bindings']
+            query = self.prefix  + ' ' + query
+
+        sparqlwrapper = SPARQLWrapper(self.url)
+        sparqlwrapper.setQuery(query)
+        sparqlwrapper.setReturnFormat(JSON)
+        data = sparqlwrapper.query().convert()
+        count = data['results']['bindings'][0]['v0_count']['value'] 
+        return count
