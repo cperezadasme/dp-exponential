@@ -1,66 +1,53 @@
 import numpy as np
-import csv
 
 
 class ExponentialMechanism:
     """
-    exponential mechanism
+    Mecanismo exponencial
     """
 
     def __init__(self, graph):
         self.graph = graph
-        self.s = self._calculate_sensitivity()
+        self.sensitivity = self._calculate_sensitivity()
         self._create_freq_dict()
 
     def _calculate_sensitivity(self):
         """
-        calculate the sensitivity
-        as the score function is #members, the sensitivity is 1
-
-        Returns:
-            [int] -- [sensitivity]
+        Función para calcular sensibilidad
+        En este caso es 1, dado que esta dado por presencia o ausencia de una oferta
         """
+ 
         return 1
 
     def _create_freq_dict(self):
         """
-        calculate the number and probability for education attribute
+        Función para crear diccionario de precios, cantidad y probabilidad de una oferta.
+        A partir del subgrafo generado por la consulta
         """
-
-        # self.educnt = {}
-        # eduidx = ATTNAME.index('education')
-        # for record in self.records:
-        #     self.educnt[record[eduidx]] = self.educnt.get(record[eduidx], 0) + 1
-        # self.eduprop = {}
-        # for key, val in self.educnt.items():
-        #     self.eduprop[key] = val / len(self.records)
 
         self.offers_count = {}
         self.offers_prop = {}
         self.offers_price = {}
-        ofile = open('./grafo.csv', "w")
-        writer = csv.writer(ofile, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL)
-        # import ipdb; ipdb.set_trace()
+
         for element in self.graph:
-            # print('BGP_Elements: '+str(len(element)))
             element_id = element['@id']
+
+            # Se obtiene los precios de la oferta, esto se utilizará para calcular la utilidad
             if 'Offer' in element_id:
                 if element_id not in self.offers_price.keys():
                     value = element['http://purl.org/goodrelations/price'][0]['@value']
                     self.offers_price[element_id] = int(value)
-                    # writer.writerow([element_id])
 
+            # Se cuentan las conexiones a una oferta
             if 'Retailer' in element_id:
                 for offer in element['http://purl.org/goodrelations/offers']:
                     offer_id = offer['@id']
+
                     if offer_id not in self.offers_count.keys():
                         self.offers_count[offer_id] = 1
-                        writer.writerow([offer_id])
                     else:
                         self.offers_count[offer_id] += 1
-        # import ipdb; ipdb.set_trace()
-        # ofile.close()
-        print(len(self.offers_count.keys()))
+
         total = sum(self.offers_count.values())
 
         for offer_id, count in self.offers_count.items():
@@ -68,44 +55,29 @@ class ExponentialMechanism:
 
     def _exponential(self, u, e):
         """
-        return exponential probability
-
-        Arguments:
-            u {[float]} -- [probability]
-            e {[float]} -- [epsilon]
-
-        Returns:
-            [float] -- [exponential probability]
+        Retorna la probabilidad exponencial. A partir de la utilidad, epsilon y sensibilidad
         """
 
-        return np.random.exponential(e * u / (2 * self.s))
+        return np.random.exponential(e * u / (2 * self.sensitivity))
 
     def query_with_dp(self, e=1, querynum=1000):
         """
-        query with Exponential Mechanism
-        Keyword Arguments:
-            e {float} -- [epsilon] (default: {1})
-            querynum {int} -- [number of queries] (default: {1000})
-        Returns:
-            [list] -- [list of queries]
+        Retorna el ruido total de la consulta, dado que calcula la probabilidad exponencial para cada elemento,
+        luego las suma y entrega el resultado agregado.
+        
+        Responde una lista según la cantidad de veces que se repita la consulta
         """
 
-        # candidate = list(self.educnt.keys())
-        # candidatefreq = [self.educnt[k] for k in candidate]
-        # candidate = list(self.offers_prop.keys())
-        # print(candidate)
-        # print([self.educnt[k] for k in candidate ])
         response = []
 
         for _ in range(querynum):
             weights = []
+
             for offer_id, prop in self.offers_prop.items():
                 weights.append(self._exponential(self.offers_price[offer_id] * prop, e))
 
             response.append(int(sum(weights)))
 
-        print('RESPONSE: ', response)
-        # import ipdb; ipdb.set_trace()
         return response
 
 #     def calc_groundtruth(self):

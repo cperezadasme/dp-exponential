@@ -27,7 +27,6 @@ iterations = 10
 epsilon = 1
 
 # Leer argumentos
-import ipdb; ipdb.set_trace()
 for idx, arg in enumerate(sys.argv):
     if arg in prefix_args:
         print("Prefix Arg")
@@ -110,40 +109,35 @@ def median_error(true_value, results):
     return np.median(errors)
 
 
-# ofile = open('./results.csv', "w")
-# writer = csv.writer(ofile, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL)
-# head = [
-#     "filename",
-#     "countQueryResult",
-#     "countQueryResultPlusNoise",
-#     "Epsilon",
-#     "elasticStability",
-#     "k",
-#     "queryGraphSize",
-#     "maxElasticStability",
-#     "medianError",
-#     "result1",
-#     "result2",
-#     "result3",
-#     "result4",
-#     "result5",
-#     "result6",
-#     "result7",
-#     "result8",
-#     "result9",
-#     "result10",
-# ]
-# writer.writerow(head)
+## Escribir archivo con respuesta
+result_file = open('./results.csv', "w")
+writer = csv.writer(result_file, delimiter=',', quoting=csv.QUOTE_ALL)
+head = [
+    "Consulta",
+    "Resultado",
+    "Epsilon",
+    '% Ruido Promedio',
+    'Resultado promedio',
+]
 
+for i in range(iterations):
+    head.append(f'Result{i+1}')
+
+writer.writerow(head)
 
 for value in queries:
     print(value)
     count = sparql.raw(value['query'])
     print("Valor real Count : " + str(count))
-    resultados_privdiff = []
+    result_privdiff = []
+    diff_percent = []
+ 
     for delta in value['deltas']:
-        resultados_privdiff.append(int(count) + delta)
-    print('resultado: ', resultados_privdiff)
+        count = int(count)
+        result_privdiff.append(count + delta)
+        diff_percent.append(round(delta/count * 100, 3))
+    print('Resultado: ', result_privdiff)
+    print('% Ruido: ', diff_percent)
     # laplace_scale = (2 * value['max_value']) / 0.1
     # print('laplace_scale vale: ')
     # print(laplace_scale)
@@ -153,35 +147,24 @@ for value in queries:
     # for i in range(0, iterations):
     #     laplace = laplace_array[i]
     #     resultado = float(count) + laplace
-    #     resultados_privdiff.append(resultado)
+    #     result_privdiff.append(resultado)
     #     print("Resultado " + str(i) + " :" + str(resultado))
-    # print("Median Error : " + str(median_error(int(count), resultados_privdiff)))
-    # final_result = float(np.median(resultados_privdiff))
-#     if from_folder:
-#         query_input = value['filename']
-#     else:
-#         query_input = value['query']
-#     row = [
-#         query_input,
-#         count,
-#         final_result,
-#         0.1,
-#         value['pol'],
-#         value['k'],
-#         value['n'],
-#         value['max_value'],
-#         median_error(int(count), resultados_privdiff),
-#         resultados_privdiff[0],
-#         resultados_privdiff[1],
-#         resultados_privdiff[2],
-#         resultados_privdiff[3],
-#         resultados_privdiff[4],
-#         resultados_privdiff[5],
-#         resultados_privdiff[6],
-#         resultados_privdiff[7],
-#         resultados_privdiff[8],
-#         resultados_privdiff[9],
-#     ]
-#     writer.writerow(row)
+    # print("Median Error : " + str(median_error(int(count), result_privdiff)))
+    # final_result = float(np.median(result_privdiff))
+    if from_folder:
+        query_input = value['filename']
+    else:
+        query_input = value['query']
+    row = [
+        query_input,
+        count,
+        epsilon,
+        round(sum(diff_percent)/iterations, 3),
+        int(sum(result_privdiff)/iterations),
+    ]
 
-# ofile.close()
+    for result in result_privdiff:
+        row.append(result)
+    writer.writerow(row)
+
+result_file.close()
