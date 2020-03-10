@@ -35,7 +35,11 @@ class ExponentialMechanism:
             # Se obtiene los precios de la oferta, esto se utilizará para calcular la utilidad
             if 'Offer' in element_id:
                 if element_id not in self.offers_price.keys():
-                    value = element['http://purl.org/goodrelations/price'][0]['@value']
+                    price  = element.get('http://purl.org/goodrelations/price', None)
+                    if price:
+                        value = element['http://purl.org/goodrelations/price'][0]['@value']
+                    else:
+                        value = 1
                     self.offers_price[element_id] = int(value)
 
             # Se cuentan las conexiones a una oferta
@@ -72,9 +76,14 @@ class ExponentialMechanism:
 
         for _ in range(querynum):
             weights = []
-
-            for offer_id, prop in self.offers_prop.items():
-                weights.append(self._exponential(self.offers_price[offer_id] * prop, e))
+            if self.offers_prop:
+                for offer_id, prop in self.offers_prop.items():
+                    weights.append(self._exponential(self.offers_price[offer_id] * prop, e))
+            else:
+                total = len(self.offers_price.keys())
+                prop = 1 / total
+                for offer_id, price in self.offers_price.items():
+                    weights.append(self._exponential(price * prop, e))
 
             response.append(int(sum(weights)))
 
