@@ -1,11 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import sys, re
 from functions import SparqlQuery
 from tabulate import tabulate
-from SPARQLWrapper import SPARQLWrapper, N3, SPARQLWrapper2
-from rdflib import Graph, plugin
-#from rdflib import Graph
+from SPARQLWrapper import SPARQLWrapper2
 
 prefix_args = {'-p', '-prefix'}
 debug_args = {'-d', '-debug'}

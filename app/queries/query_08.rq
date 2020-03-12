@@ -1,0 +1,1 @@
+SELECT (COUNT(?v0) as ?v0_count) WHERE { <http://db.uwaterloo.ca/~galuc/wsdbm/User17008> <http://schema.org/nationality> ?v2 . ?v0 <http://schema.org/eligibleRegion> ?v2 . ?v0 <http://schema.org/eligibleQuantity> ?v1 . ?v0 <http://purl.org/goodrelations/price> ?v3 . }
