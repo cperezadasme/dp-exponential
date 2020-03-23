@@ -1,7 +1,8 @@
 # url: Endpoint para realizar queries de Sparql en un servidor Apache Jena
 # Formato : 'http://localhost:3030/<nombre dataset>/query'
-url = 'http://localhost:3030/dataset/query'
-
+# url = 'http://localhost:3030/dataset/query'
+# wikidata
+url = 'https://query.wikidata.org/bigdata/namespace/wdq/sparql'
 # Prefix para WatDiv
 prefix = '''
 PREFIX wsdbm: <http://db.uwaterloo.ca/~galuc/wsdbm/>

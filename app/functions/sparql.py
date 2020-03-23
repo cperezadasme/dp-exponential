@@ -83,12 +83,22 @@ class SparqlQuery:
             aux.append(pattern_str)
         bgp_string = ' . '.join(aux)
         sparqlwrapper = SPARQLWrapper(self.url)
+
         print('CONSTRUCT QUERY: ' + 'CONSTRUCT WHERE {' + bgp_string + '}')
+
         sparqlwrapper.setQuery(self.prefix + ' ' + 'CONSTRUCT WHERE {' + bgp_string + '}')
         sparqlwrapper.setReturnFormat(JSON)
         graph = sparqlwrapper.query().convert()
-        results = graph.serialize(format='application/ld+json')
-        return json.loads(results)
+
+        try:
+            # consultas watdiv
+            results = graph.serialize(format='application/ld+json')
+            response = json.loads(results)
+        except AttributeError:
+            # consultas wikidata
+            response = graph['results']['bindings']
+
+        return response
 
     def raw(self, query, prefix=None):
         """

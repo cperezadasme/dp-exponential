@@ -88,8 +88,10 @@ for line in lines:
                     'query': query,
                     'deltas': result,
                 }
+ 
                 if from_folder:
                     obj['filename'] = filename
+ 
                 queries.append(obj)
             except Exception as e:
                 print(e)
@@ -105,23 +107,23 @@ EVALUACION QUERIES - LAPLACE
 def median_error(true_value, results):
     errors = []
     for value in results:
-        errors.append(abs(true_value - value))
+        errors.append(abs(true_value - value)/true_value)
     return np.median(errors)
 
 
 ## Escribir archivo con respuesta
-result_file = open('./results.csv', "w")
+result_file = open(f'./results_{str(epsilon)}.csv', "w")
 writer = csv.writer(result_file, delimiter=',', quoting=csv.QUOTE_ALL)
 head = [
     "Consulta",
-    "Resultado",
+    "Resultado real",
     "Epsilon",
-    '% Ruido Promedio',
-    'Resultado promedio',
+    'Mediana resultado',
+    'Mediana error',
 ]
 
-for i in range(iterations):
-    head.append(f'Result{i+1}')
+# for i in range(iterations):
+#     head.append(f'Result{i+1}')
 
 writer.writerow(head)
 
@@ -130,14 +132,11 @@ for value in queries:
     count = sparql.raw(value['query'])
     print("Valor real Count : " + str(count))
     result_privdiff = []
-    diff_percent = []
  
     for delta in value['deltas']:
         count = int(count)
         result_privdiff.append(count + delta)
-        diff_percent.append(round(delta/count * 100, 3))
     print('Resultado: ', result_privdiff)
-    print('% Ruido: ', diff_percent)
     # laplace_scale = (2 * value['max_value']) / 0.1
     # print('laplace_scale vale: ')
     # print(laplace_scale)
@@ -149,8 +148,9 @@ for value in queries:
     #     resultado = float(count) + laplace
     #     result_privdiff.append(resultado)
     #     print("Resultado " + str(i) + " :" + str(resultado))
-    # print("Median Error : " + str(median_error(int(count), result_privdiff)))
-    # final_result = float(np.median(result_privdiff))
+    error = float(median_error(int(count), result_privdiff) * 100)
+    print("Median Error : " + str(error))
+    final_result = float(np.median(result_privdiff))
     if from_folder:
         query_input = value['filename']
     else:
@@ -159,12 +159,13 @@ for value in queries:
         query_input,
         count,
         epsilon,
-        round(sum(diff_percent)/iterations, 3),
-        int(sum(result_privdiff)/iterations),
+        final_result,
+        error,
     ]
 
-    for result in result_privdiff:
-        row.append(result)
+    if iterations == 10:
+        for result in result_privdiff:
+            row.append(result)
     writer.writerow(row)
 
 result_file.close()
