@@ -17,6 +17,7 @@ class SparqlQuery:
         self.url = config.url
         self.prefix = config.prefix
         self.debug = debug
+        self.size = 0
 
     def setPrefix(self, prefix):
         """
@@ -87,6 +88,7 @@ class SparqlQuery:
         print('CONSTRUCT QUERY: ' + 'CONSTRUCT WHERE {' + bgp_string + '}')
 
         sparqlwrapper.setQuery(self.prefix + ' ' + 'CONSTRUCT WHERE {' + bgp_string + '}')
+        self.size = len(sparqlwrapper.query().convert().all_nodes())
         sparqlwrapper.setReturnFormat(JSON)
         graph = sparqlwrapper.query().convert()
 

@@ -32,8 +32,10 @@ class ExponentialMechanism:
         self.offers_price = {}
 
         if self.is_wikidata:
+            total = 0
             for element in self.graph:
                 element_id = element['subject']['value']
+                total += 1
                 if element_id in self.offers_count.keys():
                     self.offers_count[element_id] += 1
                 else:
@@ -63,6 +65,7 @@ class ExponentialMechanism:
                             self.offers_count[offer_id] += 1
 
         total = sum(self.offers_count.values())
+    
         for offer_id, count in self.offers_count.items():
             self.offers_prop[offer_id] = count / total
 
@@ -88,97 +91,15 @@ class ExponentialMechanism:
             if self.offers_prop:
                 for offer_id, prop in self.offers_prop.items():
                     if self.is_wikidata:
-                        utility = 1
+                        utility = self.offers_count[offer_id]
                     else:
                         utility = self.offers_price[offer_id] * prop
                     weights.append(self._exponential(utility, e))
             else:
                 total = len(self.offers_price.keys())
-                prop = 1 / total
+                prop = 1 / total 
                 for offer_id, price in self.offers_price.items():
                     weights.append(self._exponential(price * prop, e))
-
             response.append(int(sum(weights)))
 
         return response
-
-#     def calc_groundtruth(self):
-#         """
-#         calculate the groundtruth
-#         the most frequent education value
-
-#         Returns:  
-#             [string] -- [most frequent education value]
-#         """
-
-#         eduidx = ATTNAME.index('education')
-#         return Counter([record[eduidx] for record in self.records if record[eduidx] != '*']).most_common(1)[0][0]
-
-#     def calc_distortion(self, queryres):
-#         """
-#         calculate the distortion
-
-#         Arguments:
-#             queryres {[list]} -- [query result]
-
-#         Returns:
-#             [float] -- [distortion]
-#         """
-
-#         return 1 - Counter(queryres)[self.calc_groundtruth()] / len(queryres)
-
-
-# def prove_indistinguishable(queryres1, queryres2):
-#     """
-#     proove the indistinguishable for two query results
-
-#     Arguments:
-#         queryres1 {[list]} -- [query 1 result]
-#         queryres2 {[list]} -- [query 2 result]
-
-#     Returns:
-#         [float] -- [probability quotient]
-#     """
-
-#     prob1 = Counter(queryres1)
-#     for key in prob1:
-#         prob1[key] /= len(queryres1)
-#     prob2 = Counter(queryres2)
-#     for key in prob2:
-#         prob2[key] /= len(queryres2)
-#     res = 0
-#     num = 0
-#     for key in prob1:
-#         if key not in prob2:
-#             print('no query result {} in query 2'.format(key))
-#             continue
-#         res += prob1[key] / prob2[key]
-#         num += 1
-#     res1overres2 = res / num
-#     res = 0
-#     num = 0
-#     for key in prob2:
-#         if key not in prob1:
-#             print('no query result {} in query 1'.format(key))
-#             continue
-#         res += prob2[key] / prob1[key]
-#         num += 1
-#     res2overres1 = res / num
-#     return res1overres2, res2overres1
-
-
-# if __name__ == "__main__":
-#     records = readdata()
-#     ExpMe = ExponentialMechanism(records)
-#     res1 = ExpMe.query_with_dp(0.05, 1000)
-#     # res2 = ExpMe.query_with_dp(0.05, 1000)
-#     v1, v2, v3 = generate_data_for_exponential_mechanism(records)
-#     ExpMe2 = ExponentialMechanism(v1)
-#     res2 = ExpMe2.query_with_dp(0.05, 1000)
-#     # print(res1)
-#     print(ExpMe.calc_distortion(res1))
-#     print(ExpMe.calc_distortion(ExpMe.query_with_dp(1, 1000)))
-#     print(ExpMe.calc_distortion(res2))
-#     print(prove_indistinguishable(res1, res2))
-#     print(prove_indistinguishable(res2, res1))
-#     print(math.exp(0.05))

@@ -87,6 +87,7 @@ for line in lines:
                 obj = {
                     'query': query,
                     'deltas': result,
+                    'size': sparql.size,
                 }
  
                 if from_folder:
@@ -118,47 +119,35 @@ head = [
     "Consulta",
     "Resultado real",
     "Epsilon",
+    'Tamaño subggrafo',
     'Mediana resultado',
     'Mediana error',
 ]
-
-# for i in range(iterations):
-#     head.append(f'Result{i+1}')
 
 writer.writerow(head)
 
 for value in queries:
     print(value)
     count = sparql.raw(value['query'])
-    print("Valor real Count : " + str(count))
     result_privdiff = []
  
     for delta in value['deltas']:
         count = int(count)
         result_privdiff.append(count + delta)
-    print('Resultado: ', result_privdiff)
-    # laplace_scale = (2 * value['max_value']) / 0.1
-    # print('laplace_scale vale: ')
-    # print(laplace_scale)
-    # laplace_array = np.random.laplace(scale=laplace_scale, size=iterations)
-    # print('laplace_array vale :')
-    # print(laplace_array)
-    # for i in range(0, iterations):
-    #     laplace = laplace_array[i]
-    #     resultado = float(count) + laplace
-    #     result_privdiff.append(resultado)
-    #     print("Resultado " + str(i) + " :" + str(resultado))
+
     error = float(median_error(int(count), result_privdiff) * 100)
-    print("Median Error : " + str(error))
     final_result = float(np.median(result_privdiff))
+
     if from_folder:
         query_input = value['filename']
     else:
         query_input = value['query']
+
     row = [
         query_input,
         count,
         epsilon,
+        value['size'],
         final_result,
         error,
     ]
